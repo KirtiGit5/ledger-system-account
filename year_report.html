@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <div class="inline-btns" style="justify-content: space-between;">
+    <h2>Year wise Report</h2>
+    <a href="{% url 'receipt_list' %}" class="btn btn-list">Back</a>
+  </div>
+  <div class="years-bar">
+    {% for y in years %}
+      <a href="?year={{ y }}" class="btn btn-list{% if selected_year == y %} btn{% endif %}">{{ y }}</a>
+    {% endfor %}
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>SR</th>
+        <th>Year</th>
+        <th>Total Debit</th>
+        <th>Total Credit</th>
+        <th>Pending Balance</th>
+        <th>Closing Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>{{ selected_year }}</td>
+        <td>₹ {{ totals.debit|floatformat:2 }}</td>
+        <td>₹ {{ totals.credit|floatformat:2 }}</td>
+        <td>₹ {{ totals.pending|floatformat:2 }}</td>
+        <td>₹ {{ totals.closing|floatformat:2 }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+  body {
+    background-image: url("{% static 'adbhut-m.jpg' %}"); /* replace with your image */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  .card {
+    background: rgba(255,255,255,0.85); /* Less opaque */
+    border-radius: 9px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  table {
+    background: rgba(255,255,255,0.8); /* Slight transparency for table */
+  }
+</style>
+<div class="card">
+  <div class="inline-btns" style="justify-content: space-between;">
+    <div>
+      <a href="{% url 'receipt_add' %}" class="btn">Add</a>
+      <a href="{% url 'month_report' %}" class="btn btn-list">Month wise Report</a>
+      <a href="{% url 'year_report' %}" class="btn btn-list">Year wise Report</a>
+    </div>
+  </div>
+  <form method="get" style="margin: 16px 0;">
+    <div class="filter-bar">
+      <label for="code">Code</label>
+      <input type="text" name="code" id="code" value="{{ filters.code }}">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" value="{{ filters.name }}">
+      <label for="mobile">Mobile</label>
+      <input type="text" name="mobile" id="mobile" value="{{ filters.mobile }}">
+      <label for="month">Month</label>
+      <select name="month" id="month">
+        <option value="">All</option>
+        {% for m in months %}
+          <option value="{{ m }}" {% if filters.month == m %}selected{% endif %}>{{ m }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-list">Find</button>
+    </div>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th class="sr-col">SR</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Date</th>
+        <th>Month</th>
+        <th>Year</th>
+        <th>Debit</th>
+        <th>Credit</th>
+        <th>Total</th>
+        <th>Pending</th>
+        <th>Closing</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in deposits %}
+      <tr>
+        <td class="sr-col">{{ forloop.counter }}</td>
+        <td><a href="{% url 'receipt_edit' d.id %}" class="edit-link">{{ d.code }}</a></td>
+        <td>{{ d.member_name }}</td>
+        <td>{{ d.member_mobile }}</td>
+        <td>{{ d.date }}</td>
+        <td>{{ d.month }}</td>
+        <td>{{ d.year }}</td>
+        <td>{{ d.debit_amount }}</td>
+        <td>{{ d.credit_amount }}</td>
+        <td>{{ d.total_amount }}</td>
+        <td>{{ d.pending_amount }}</td>
+        <td>{{ d.closing_balance }}</td>
+        <td style="white-space: nowrap;">
+          <a href="{% url 'receipt_edit' d.id %}" class="btn btn-list">Edit</a>
+          <form method="post" action="{% url 'receipt_remove' d.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-list" onclick="return confirm('Are you sure you want to remove this entry?')">Remove</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="13" style="text-align:center;">No records found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
