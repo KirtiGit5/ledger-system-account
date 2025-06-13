@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ledger System</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('/static/maharajji.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+    .container { max-width: 1300px; margin: 24px auto; }
+    .card { background: rgba(255,255,255,0.98); border-radius: 9px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 24px; margin-bottom: 24px; }
+    .btn { background: #1976d2; color: white; border: none; border-radius: 6px; padding: 8px 24px; font-weight: bold; cursor: pointer; margin-right: 10px; }
+    .btn-list { border: 1px solid #1976d2; background: white; color: #1976d2; }
+    table { width: 100%; background: #ffffcc; border-collapse: collapse; }
+    th, td { border: 1px solid #bdbdbd; padding: 8px 12px; }
+    th { background: #e7e7b0; font-weight: bold; }
+    tr:nth-child(even) { background: #f8f57a; }
+    .filter-bar { display: flex; gap: 0; }
+    .filter-bar input, .filter-bar select { border: 1px solid #bdbdbd; border-radius: 0; padding: 5px; }
+    .filter-bar label { background: #e7e7b0; text-align: center; font-weight: bold; border: 1px solid #bdbdbd; padding: 6px 12px; }
+    .inline-btns { display: flex; gap: 10px; align-items: center; }
+    .months-bar, .years-bar { margin: 18px 0; display: flex; gap: 6px; flex-wrap: wrap; }
+    .months-bar .btn, .years-bar .btn { padding: 6px 16px; font-size: 15px; }
+    .sr-col { width: 35px; }
+    a.edit-link { color: #1976d2; font-weight: bold; text-decoration: underline; cursor: pointer; }
+    .header-bar {
+      width: 100%; background: rgba(255,255,255,0.90); min-height: 44px; box-shadow: 0 2px 6px #e7e7b0;
+      display: flex; justify-content: flex-end; align-items: center; padding: 0 32px 0 0;
+    }
+    .logout-link {
+      color: #1976d2;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 10px 0 10px 0;
+      padding: 6px 18px;
+      background: #fafafa;
+      border-radius: 6px;
+      border: 1px solid #1976d2;
+      transition: background 0.2s, color 0.2s;
+    }
+    .logout-link:hover,
+    .logout-btn:hover {
+      background: #1976d2;
+      color: #fff;
+    }
+    .logout-form {
+      display: inline;
+    }
+    .logout-btn {
+      background: transparent;
+      border: none;
+      color: #1976d2;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 10px 0 10px 0;
+      padding: 6px 18px;
+      border-radius: 6px;
+      border: 1px solid #1976d2;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    {% endif %}
+  </div>
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
