@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #a770ef 0%, #f6d365 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .login-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.13);
+      display: flex;
+      padding: 0;
+      overflow: hidden;
+      max-width: 800px;
+      width: 100%;
+      min-height: 450px;
+    }
+    .login-left {
+      padding: 48px 40px 32px 40px;
+      width: 370px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .login-left h2 {
+      margin-bottom: 8px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #22223b;
+    }
+    .login-left .subtitle {
+      color: #8d99ae;
+      font-size: 1rem;
+      margin-bottom: 32px;
+    }
+    .login-left form label {
+      font-weight: 600;
+      color: #3a3a3a;
+      font-size: 15px;
+      margin-bottom: 5px;
+      display: block;
+    }
+    .login-left form input[type="text"],
+    .login-left form input[type="password"] {
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 18px;
+      font-size: 15px;
+      border: 1px solid #d3d3d3;
+      border-radius: 8px;
+      background: #f5f6fa;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .login-left form input:focus {
+      border: 1.5px solid #a770ef;
+      background: #fff;
+    }
+    .login-left .remember-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+    .login-left .remember-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+    .login-left .remember-row label {
+      margin-bottom: 0;
+      font-weight: 400;
+      font-size: 14px;
+      color: #5a5a5a;
+      cursor: pointer;
+    }
+    .login-left button {
+      width: 100%;
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.13rem;
+      font-weight: bold;
+      padding: 12px 0;
+      margin-top: 2px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 3px 12px 0 rgba(108,99,255,0.10);
+    }
+    .login-left button:hover {
+      background: #574b90;
+    }
+    .login-error {
+      color: #ff3d48;
+      font-size: 15px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    .login-right {
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-width: 300px;
+      min-height: 320px;
+    }
+    .login-right img {
+      width: 95%;
+      max-width: 350px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) {
+      .login-card {
+        flex-direction: column;
+        max-width: 440px;
+        min-height: 0;
+      }
+      .login-left { width: 100%; }
+      .login-right { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-left">
+        <h2>Login</h2>
+        <div class="subtitle" style="margin-bottom: 32px;">Please enter your credentials to continue.</div>
+        {% if error %}
+          <div class="login-error">{{ error }}</div>
+        {% endif %}
+        <form method="post" autocomplete="off">
+          {% csrf_token %}
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" autocomplete="username" required>
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" autocomplete="current-password" required>
+          <div class="remember-row">
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember">Remember me</label>
+          </div>
+          <button type="submit">LOGIN</button>
+        </form>
+      </div>
+      <div class="login-right">
+  <div style="width:100%; text-align:center;">
+    <h3 style="margin-top: 10px; color: #574b90; font-size: 1.4rem; font-weight: 700;">Bhumaniketan Ashram</h3>
+    <h3 style="margin-top: -20px; color: #574b90; font-size: 1.4rem; font-weight: 700;">Ledger - System</h3>
+    <img src="{% static 'maharaj-ji.jpg' %}" alt="Login Illustration">
+  </div>
+</div>
+    </div>
+  </div>
+</body>
+</html>
