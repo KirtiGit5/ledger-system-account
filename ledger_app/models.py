@@ -46,7 +46,7 @@ class ReceiptBookDeposit(models.Model):
     closing_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     narration = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.IntegerField(default=1)  # <--- Added field for soft delete (1=active, -1=removed)
+    # status = models.IntegerField(default=1)  # <--- Added field for soft delete (1=active, -1=removed)
 
     def save(self, *args, **kwargs):
         # Auto-generate code if not set

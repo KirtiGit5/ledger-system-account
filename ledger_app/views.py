@@ -39,7 +39,8 @@ def receipt_list(request):
     mobile = request.GET.get('mobile', '')
     month = request.GET.get('month', '')
 
-    deposits = ReceiptBookDeposit.objects.filter(status=1)
+    # deposits = ReceiptBookDeposit.objects.filter(status=1)
+    deposits = ReceiptBookDeposit.objects.all()
     if code:
         deposits = deposits.filter(code__icontains=code)
     if name:
@@ -70,7 +71,8 @@ def receipt_add(request):
 
 @login_required(login_url='login')
 def receipt_edit(request, pk):
-    deposit = get_object_or_404(ReceiptBookDeposit, pk=pk,status=1)
+    # deposit = get_object_or_404(ReceiptBookDeposit, pk=pk,status=1)
+    deposit = get_object_or_404(ReceiptBookDeposit, pk=pk)
     if request.method == 'POST':
         form = ReceiptBookDepositForm(request.POST, instance=deposit)
         if form.is_valid():
@@ -84,8 +86,8 @@ def receipt_edit(request, pk):
 def month_report(request):
     months = [choice[0] for choice in ReceiptBookDeposit.MONTH_CHOICES]
     selected_month = request.GET.get('month', months[0])
-    data = ReceiptBookDeposit.objects.filter(month=selected_month,status=1)
-
+    # data = ReceiptBookDeposit.objects.filter(month=selected_month,status=1)
+    data = ReceiptBookDeposit.objects.filter(month=selected_month)
     total_debit = data.aggregate(Sum('debit_amount'))['debit_amount__sum'] or 0
     total_credit = data.aggregate(Sum('credit_amount'))['credit_amount__sum'] or 0
     total_pending = data.aggregate(Sum('pending_amount'))['pending_amount__sum'] or 0
@@ -107,8 +109,8 @@ def month_report(request):
 def year_report(request):
     years = [choice[0] for choice in ReceiptBookDeposit.YEAR_CHOICES]
     selected_year = request.GET.get('year', years[0])
-    data = ReceiptBookDeposit.objects.filter(year=selected_year,status=1)
-
+    # data = ReceiptBookDeposit.objects.filter(year=selected_year,status=1)
+    data = ReceiptBookDeposit.objects.filter(year=selected_year)
     total_debit = data.aggregate(Sum('debit_amount'))['debit_amount__sum'] or 0
     total_credit = data.aggregate(Sum('credit_amount'))['credit_amount__sum'] or 0
     total_pending = data.aggregate(Sum('pending_amount'))['pending_amount__sum'] or 0
@@ -130,6 +132,8 @@ def year_report(request):
 @login_required
 def receipt_remove(request, pk):
     receipt = get_object_or_404(ReceiptBookDeposit, pk=pk)
-    receipt.status = -1
-    receipt.save()
+    # receipt.status = -1
+    # receipt.save()
+    # return redirect('receipt_list')
+    receipt.delete()
     return redirect('receipt_list')
