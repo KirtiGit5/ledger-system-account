@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-4=4)@od$iw1)#@iagwe)z=-p8aqn1=(-g@yh!%uxfwvd1rh$of'
+SECRET_KEY = 'django-insecure-4=4)@od$iw1)#@iagwe)z=-p8aqn1=(-g@yh!%uxfwvd1rh$of'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = False
 
 
-# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-ALLOWED_HOSTS = ['.onrender.com']
+# ALLOWED_HOSTS = ['.onrender.com']
 
 
 # Application definition
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,13 +134,25 @@ USE_TZ = True
 
 # STATIC_URL = 'static/'
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# STATIC_URL = '/static/'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# import os
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+# ]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 LOGIN_URL = 'login'

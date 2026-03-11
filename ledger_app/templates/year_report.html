@@ -2,7 +2,7 @@
 {% block content %}
 <div class="card">
   <div class="inline-btns" style="justify-content: space-between;">
-    <h2>Year wise Report</h2>
+    <h2>Year Wise Report</h2>
     <a href="{% url 'receipt_list' %}" class="btn btn-list">Back</a>
   </div>
   <div class="years-bar">
@@ -18,7 +18,7 @@
         <th>Total Debit</th>
         <th>Total Credit</th>
         <th>Pending Balance</th>
-        <th>Closing Balance</th>
+        {% comment %} <th>Closing Balance</th> {% endcomment %}
       </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@
         <td>₹ {{ totals.debit|floatformat:2 }}</td>
         <td>₹ {{ totals.credit|floatformat:2 }}</td>
         <td>₹ {{ totals.pending|floatformat:2 }}</td>
-        <td>₹ {{ totals.closing|floatformat:2 }}</td>
+        {% comment %} <td>₹ {{ totals.closing|floatformat:2 }}</td> {% endcomment %}
       </tr>
     </tbody>
   </table>

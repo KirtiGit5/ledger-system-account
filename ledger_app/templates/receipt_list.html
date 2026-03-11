@@ -58,9 +58,10 @@
         <th>Year</th>
         <th>Debit</th>
         <th>Credit</th>
-        <th>Total</th>
+        {% comment %} <th>Total</th> {% endcomment %}
+        {% comment %} <th>Pending</th> {% endcomment %}
         <th>Pending</th>
-        <th>Closing</th>
+        {% comment %} <th>Closing</th> {% endcomment %}
         <th>Action</th>
       </tr>
     </thead>
@@ -71,14 +72,14 @@
         <td><a href="{% url 'receipt_edit' d.id %}" class="edit-link">{{ d.code }}</a></td>
         <td>{{ d.member_name }}</td>
         <td>{{ d.member_mobile }}</td>
-        <td>{{ d.date }}</td>
+        <td>{{ d.date|date:"d/m/Y" }}</td>       
         <td>{{ d.month }}</td>
         <td>{{ d.year }}</td>
         <td>{{ d.debit_amount }}</td>
         <td>{{ d.credit_amount }}</td>
-        <td>{{ d.total_amount }}</td>
+        {% comment %} <td>{{ d.total_amount }}</td> {% endcomment %}
         <td>{{ d.pending_amount }}</td>
-        <td>{{ d.closing_balance }}</td>
+        {% comment %} <td>{{ d.closing_balance }}</td> {% endcomment %}
         <td style="white-space: nowrap;">
           <a href="{% url 'receipt_edit' d.id %}" class="btn btn-list">Edit</a>
           <form method="post" action="{% url 'receipt_remove' d.id %}" style="display:inline;">

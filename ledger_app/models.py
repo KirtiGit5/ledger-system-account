@@ -53,7 +53,7 @@ class ReceiptBookDeposit(models.Model):
         if not self.code:
             self.code = ReceiptBookDeposit.get_next_code()
         self.total_amount = self.debit_amount + self.credit_amount
-        self.pending_amount = self.credit_amount - self.debit_amount
+        self.pending_amount = self.debit_amount - self.credit_amount
         self.closing_balance = self.total_amount - self.pending_amount
         super().save(*args, **kwargs)
 

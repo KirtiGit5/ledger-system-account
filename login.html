@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -160,7 +161,8 @@
         <div style="width:100%; text-align:center;">
           <h3 style="margin-top: 10px; color: #574b90; font-size: 1.4rem; font-weight: 700;">Bhumaniketan Ashram</h3>
           <h3 style="margin-top: -20px; color: #574b90; font-size: 1.4rem; font-weight: 700;">Ledger - System</h3>
-          <img src="maharaj-ji.jpg" alt="Login Illustration">
+          {% comment %} <img src="maharaj-ji.jpg" alt="Login Illustration"> {% endcomment %}
+           <img src="{% static 'images/maharaj-ji.jpg' %}" alt="Login Illustration">
         </div>
       </div>
     </div>
