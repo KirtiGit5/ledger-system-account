@@ -94,4 +94,126 @@
     </tbody>
   </table>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+  /* ---------- MEMBER NAME VALIDATION ---------- */
+  const nameField =
+      document.querySelector("#id_member_name") ||
+      document.querySelector("input[name='member_name']");
+
+  if(nameField){
+      nameField.onchange = function(){
+          const value = nameField.value.trim();
+          const pattern = /^[A-Za-z\s]+$/;
+
+          if(value && !pattern.test(value)){
+              alert("Member name can contain only letters and spaces.");
+              nameField.value = "";
+              nameField.focus();
+          }
+      }
+  }
+
+  /* ---------- MOBILE VALIDATION ---------- */
+  const mobileField =
+      document.querySelector("#id_member_mobile") ||
+      document.querySelector("input[name='member_mobile']");
+
+  if(mobileField){
+      mobileField.setAttribute("maxlength","10");
+
+      mobileField.onchange = function(){
+          const mobile = mobileField.value.trim();
+          const numberPattern = /^[0-9]+$/;
+
+          if(mobile && !numberPattern.test(mobile)){
+              alert("Mobile number must contain only digits.");
+              mobileField.value = "";
+              mobileField.focus();
+              return;
+          }
+
+          if(mobile && mobile.length !== 10){
+              alert("Mobile number must be exactly 10 digits.");
+              mobileField.value = "";
+              mobileField.focus();
+              return;
+          }
+      }
+  }
+
+  /* ---------- DATE → MONTH & FINANCIAL YEAR AUTOFILL ---------- */
+  const dateField =
+      document.querySelector("#id_date") ||
+      document.querySelector("input[name='date']");
+
+  const monthField =
+      document.querySelector("#id_month") ||
+      document.querySelector("[name='month']");
+
+  const financialYearField =
+      document.querySelector("#id_financial_year") ||
+      document.querySelector("[name='financial_year']");
+
+  /* Disable manual editing */
+  if(monthField){
+      monthField.style.pointerEvents = "none";
+      monthField.style.backgroundColor = "#e9ecef";
+  }
+
+  if(financialYearField){
+      financialYearField.style.pointerEvents = "none";
+      financialYearField.style.backgroundColor = "#e9ecef";
+  }
+
+  if(dateField && monthField){
+      dateField.onchange = function(){
+          const selectedDate = new Date(dateField.value);
+
+          if(!isNaN(selectedDate)){
+              const months = [
+                  "January","February","March","April","May","June",
+                  "July","August","September","October","November","December"
+              ];
+
+              const monthIndex = selectedDate.getMonth();
+              const monthName = months[monthIndex];
+              const year = selectedDate.getFullYear();
+
+              /* Month */
+              monthField.value = monthName;
+
+              /* Financial Year */
+              if(financialYearField){
+                  let startYear, endYear;
+
+                  if(monthIndex >= 3){  // April start
+                      startYear = year;
+                      endYear = year + 1;
+                  }else{
+                      startYear = year - 1;
+                      endYear = year;
+                  }
+
+                  const shortStart = startYear.toString().slice(-2);
+                  const shortEnd = endYear.toString().slice(-2);
+                  const fy = shortStart + "-" + shortEnd;
+
+                  // Only set if option exists
+                  const optionExists = Array.from(financialYearField.options)
+                      .some(opt => opt.value === fy);
+
+                  if(optionExists){
+                      financialYearField.value = fy;
+                  }
+              }
+          }
+      }
+  }
+
+});
+</script>
+
 {% endblock %}

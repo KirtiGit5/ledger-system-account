@@ -2,33 +2,53 @@
 {% block content %}
 <div class="card" style="max-width: 800px; margin: 32px auto;">
   <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2 style="font-size: 2.2rem; font-weight: 700; margin: 0 0 18px 0;">{{ edit|yesno:"Edit,Add" }} Receipt Entry</h2>
+    <h2 style="font-size: 2.2rem; font-weight: 700; margin: 0 0 18px 0;">
+      {{ edit|yesno:"Edit,Add" }} Receipt Entry
+    </h2>
     <a href="{% url 'receipt_list' %}" class="btn btn-list" style="min-width: 88px; height: 38px; font-size: 18px;">List</a>
   </div>
-  <form method="post" autocomplete="off">
+
+  <form method="post" autocomplete="off" id="receiptForm">
     {% csrf_token %}
+
     <div style="background: #f5f5f5; border-radius: 7px; padding: 28px 24px 18px 24px; margin-top: 8px; border: 1.7px solid #e0e0e0;">
+
       {% for field in form %}
         <div style="margin-bottom: 26px;">
           <label for="{{ field.id_for_label }}" style="display:block; font-size: 1.25rem; font-weight: 600; margin-bottom: 6px;">
             {{ field.label }}{% if field.field.required %}*{% endif %}
           </label>
+
           {{ field }}
+
           {% if field.help_text %}
-            <div style="font-size: 1.05rem; color: #888; margin-top: 2px;">{{ field.help_text }}</div>
+            <div style="font-size: 1.05rem; color: #888; margin-top: 2px;">
+              {{ field.help_text }}
+            </div>
           {% endif %}
+
           {% for error in field.errors %}
-            <div style="color: #e53935; font-size: 1.05rem;">{{ error }}</div>
+            <div style="color: #e53935; font-size: 1.05rem;">
+              {{ error }}
+            </div>
           {% endfor %}
         </div>
       {% endfor %}
+
       <div style="display: flex; gap: 14px; margin-top: 32px;">
-        <button type="submit" class="btn" style="font-size: 1.25rem; padding: 14px 48px;">Save</button>
-        <a href="{% url 'receipt_list' %}" class="btn btn-list" style="font-size: 1.1rem; padding: 14px 38px;">Back</a>
+        <button type="submit" class="btn" style="font-size: 1.25rem; padding: 14px 48px;">
+          Save
+        </button>
+
+        <a href="{% url 'receipt_list' %}" class="btn btn-list" style="font-size: 1.1rem; padding: 14px 38px;">
+          Back
+        </a>
       </div>
+
     </div>
   </form>
 </div>
+
 <style>
   input, select, textarea {
     font-size: 1.18rem !important;
@@ -39,9 +59,132 @@
     box-sizing: border-box !important;
     background: #fff !important;
   }
+
   textarea {
     min-height: 90px !important;
     resize: vertical !important;
   }
 </style>
-{% endblock %} 
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+  /* ---------- MEMBER NAME VALIDATION ---------- */
+  const nameField =
+      document.querySelector("#id_member_name") ||
+      document.querySelector("input[name='member_name']");
+
+  if(nameField){
+      nameField.onchange = function(){
+          const value = nameField.value.trim();
+          const pattern = /^[A-Za-z\s]+$/;
+
+          if(value && !pattern.test(value)){
+              alert("Member name can contain only letters and spaces.");
+              nameField.value = "";
+              nameField.focus();
+          }
+      }
+  }
+
+  /* ---------- MOBILE VALIDATION ---------- */
+  const mobileField =
+      document.querySelector("#id_member_mobile") ||
+      document.querySelector("input[name='member_mobile']");
+
+  if(mobileField){
+      mobileField.setAttribute("maxlength","10");
+
+      mobileField.onchange = function(){
+          const mobile = mobileField.value.trim();
+          const numberPattern = /^[0-9]+$/;
+
+          if(mobile && !numberPattern.test(mobile)){
+              alert("Mobile number must contain only digits.");
+              mobileField.value = "";
+              mobileField.focus();
+              return;
+          }
+
+          if(mobile && mobile.length !== 10){
+              alert("Mobile number must be exactly 10 digits.");
+              mobileField.value = "";
+              mobileField.focus();
+              return;
+          }
+      }
+  }
+
+  /* ---------- DATE → MONTH & FINANCIAL YEAR AUTOFILL ---------- */
+  const dateField =
+      document.querySelector("#id_date") ||
+      document.querySelector("input[name='date']");
+
+  const monthField =
+      document.querySelector("#id_month") ||
+      document.querySelector("[name='month']");
+
+  const financialYearField =
+      document.querySelector("#id_financial_year") ||
+      document.querySelector("[name='financial_year']");
+
+  /* Disable manual editing */
+  if(monthField){
+      monthField.style.pointerEvents = "none";
+      monthField.style.backgroundColor = "#e9ecef";
+  }
+
+  if(financialYearField){
+      financialYearField.style.pointerEvents = "none";
+      financialYearField.style.backgroundColor = "#e9ecef";
+  }
+
+  if(dateField && monthField){
+      dateField.onchange = function(){
+          const selectedDate = new Date(dateField.value);
+
+          if(!isNaN(selectedDate)){
+              const months = [
+                  "January","February","March","April","May","June",
+                  "July","August","September","October","November","December"
+              ];
+
+              const monthIndex = selectedDate.getMonth();
+              const monthName = months[monthIndex];
+              const year = selectedDate.getFullYear();
+
+              /* Month */
+              monthField.value = monthName;
+
+              /* Financial Year */
+              if(financialYearField){
+                  let startYear, endYear;
+
+                  if(monthIndex >= 3){  // April start
+                      startYear = year;
+                      endYear = year + 1;
+                  }else{
+                      startYear = year - 1;
+                      endYear = year;
+                  }
+
+                  const shortStart = startYear.toString().slice(-2);
+                  const shortEnd = endYear.toString().slice(-2);
+                  const fy = shortStart + "-" + shortEnd;
+
+                  // Only set if option exists
+                  const optionExists = Array.from(financialYearField.options)
+                      .some(opt => opt.value === fy);
+
+                  if(optionExists){
+                      financialYearField.value = fy;
+                  }
+              }
+          }
+      }
+  }
+
+});
+</script>
+
+{% endblock %}
